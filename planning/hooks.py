@@ -8,7 +8,7 @@ app_publisher = "akrause"
 app_description = "Production Planning"
 app_icon = "octicon octicon-file-directory"
 app_color = "grey"
-app_email = "krause@foamsurface.con"
+app_email = "krause@foamsurface.com"
 app_license = "MIT"
 
 # Includes in <head>
