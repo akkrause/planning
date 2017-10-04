@@ -3,29 +3,12 @@
 
 frappe.views.calendar["Operation Schedule"] = {
 	field_map: {
-		"start": "planned_start_date",
-		"end": "planned_end_date",
+		"start": "planned_start_time",
+		"end": "planned_end_time",
 		"id": "name",
 		"title": "operation",
-		"status": "status";
+		"status": "status",
+		"allDay": "allDay"
 	},
-	gantt: true,
-	get_css_class: function(data) {
-		if(data.status==="Completed") {
-			return "success";
-		} else if(data.status==="In Process") {
-			return "warning";
-		} else {
-			return "danger";
-		}
-	},
-	filters: [
-		{
-			"fieldtype": "Link",
-			"fieldname": "sales_order",
-			"options": "Sales Order",
-			"label": __("Sales Order")
-		}	
-	],
 	get_events_method: "planning.planning.doctype.operation_schedule.operation_schedule.get_events"
 }

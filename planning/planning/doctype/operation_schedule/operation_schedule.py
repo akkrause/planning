@@ -20,15 +20,12 @@ def get_events(start, end, filters=None):
 	from frappe.desk.calendar import get_event_conditions
 	conditions = get_event_conditions("Operation Schedule", filters)
 
-	data = frappe.db.sql("""select name, operation, planned_start_date,
-		planned_end_date, status
-		from `tabProduction Order`
-		where ((ifnull(planned_start_date, '0000-00-00')!= '0000-00-00') \
-				and (planned_start_date <= %(end)s) \
-			and ((ifnull(planned_start_date, '0000-00-00')!= '0000-00-00') \
-				and planned_end_date >= %(start)s)) {conditions}
-		""".format(conditions=conditions), {
-			"start": start,
-			"end": end
-		}, as_dict=True, update={"allDay": 0})
+	data = frappe.db.sql("""select name, operation, planned_start_time,
+		planned_end_time, status
+		from `tabOperation Schedule`
+		where ((ifnull(planned_start_time, '0000-00-00')!= '0000-00-00') \
+				and (planned_start_time <= '{end}') \
+			and ((ifnull(planned_start_time, '0000-00-00')!= '0000-00-00') \
+				and planned_end_time >= '{start}')) {conditions}
+		""".format(start=start, end=end, conditions=conditions), as_dict=True, update={"allDay": 0})
 	return data
