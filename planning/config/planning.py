@@ -16,7 +16,16 @@ def get_data():
 					"name": "Material Schedule",
 					"description": _("Schedule of planned material transaction."),
 				},
-
+			]
+		},
+		{
+			"label": _("Setup"),
+			"items": [
+				{
+					"type": "doctype",
+					"name": "Planning Settings",
+					"description": _("Global settings for planning processes."),
+				},
 			]
 		}
 	]

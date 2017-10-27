@@ -489,7 +489,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2017-08-25 21:51:25.281700", 
+ "modified": "2017-10-14 19:06:08.697318", 
  "modified_by": "Administrator", 
  "module": "Planning", 
  "name": "Operation Schedule", 
@@ -523,6 +523,6 @@
  "show_name_in_global_search": 0, 
  "sort_field": "modified", 
  "sort_order": "DESC", 
- "track_changes": 1, 
+ "track_changes": 0, 
  "track_seen": 0
 }
