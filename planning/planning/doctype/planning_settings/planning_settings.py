@@ -9,24 +9,31 @@ from operator import attrgetter
 
 class PlanningSettings(Document):
 
+	def __init__(self, arg1, arg2=None):
+		super(PlanningSettings, self).__init__(arg1, arg2)
+		self.holiday_list = frappe.db.sql("""SELECT name,
+				parent,
+				parentfield,
+				parenttype,
+				holiday_date,
+				description
+				FROM `tabHoliday`;""", as_dict=1)
+		self.workstation_list = frappe.db.sql("SELECT name, holiday_list FROM `tabWorkstation`;", as_dict=1)
+		
 	def clear_tables(self):
 		frappe.db.sql("""delete
 			from `tabOperation Schedule`;""")
 		frappe.db.sql("""delete
-			from `tabMaterials Schedule`;""")
+			from `tabMaterial Schedule`;""")
 			
 	def get_production_order_operations(self):
 		poo_list = frappe.db.sql("""SELECT name,
-				creation,
-				modified,
-				modified_by,
-				owner,
-				docstatus,
 				parent,
 				parentfield,
 				parenttype,
 				idx,
 				operation,
+				planned_end_time,
 				time_in_mins,
 				status,
 				planned_operating_cost,
@@ -38,11 +45,8 @@ class PlanningSettings(Document):
 				bom
 			FROM `tabProduction Order Operation`
 			WHERE status <> 'Completed';""", as_dict=1)
-			
-			
-		for p in sorted(poo_list, key=attrgetter('planned_start_time')):
-			print p.name, p.parent, p.status, p.planned_start_time, p.time_in_mins
-				
+					
 	def run_planning(self):
-		self.get_production_order_operations()
-		
+#		for p in sorted(self.holiday_list, key=attrgetter('holiday_date')):
+#			print p.name, p.parent, p.holiday_date, p.description
+		print self.workstation_list
