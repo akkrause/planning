@@ -18,7 +18,10 @@ class PlanningSettings(Document):
 				holiday_date,
 				description
 				FROM `tabHoliday`;""", as_dict=1)
-		self.workstation_list = frappe.db.sql("SELECT name, holiday_list FROM `tabWorkstation`;", as_dict=1)
+		self.workstation_list = frappe.db.sql("""SELECT name,
+				holiday_list
+				FROM `tabWorkstation`;""", as_dict=1)
+		self.poo_list = []
 		
 	def clear_tables(self):
 		frappe.db.sql("""delete
@@ -27,26 +30,26 @@ class PlanningSettings(Document):
 			from `tabMaterial Schedule`;""")
 			
 	def get_production_order_operations(self):
-		poo_list = frappe.db.sql("""SELECT name,
-				parent,
-				parentfield,
-				parenttype,
-				idx,
-				operation,
-				planned_end_time,
-				time_in_mins,
-				status,
-				planned_operating_cost,
-				description,
-				planned_start_time,
-				workstation,
-				hour_rate,
-				completed_qty,
-				bom
-			FROM `tabProduction Order Operation`
-			WHERE status <> 'Completed';""", as_dict=1)
+		self.poo_list = frappe.db.sql("""SELECT poo.name,
+				poo.parent,
+				poo.parentfield,
+				poo.parenttype,
+				poo.operation,
+				poo.time_in_mins,
+				poo.status,
+				poo.planned_operating_cost,
+				poo.description,
+				poo.workstation,
+				poo.hour_rate,
+				poo.completed_qty,
+				po.expected_delivery_date
+			FROM `tabProduction Order Operation` AS poo
+			INNER JOIN `tabProduction Order` AS po
+				ON po.name = poo.parent
+			WHERE poo.status <> 'Completed';""", as_dict=1)
 					
 	def run_planning(self):
-#		for p in sorted(self.holiday_list, key=attrgetter('holiday_date')):
-#			print p.name, p.parent, p.holiday_date, p.description
-		print self.workstation_list
+		self.clear_tables()
+		self.get_production_order_operations()
+		for p in sorted(self.poo_list, key=attrgetter('holiday_date')):
+			print p.name, p.parent, p.workstation, p.expected_delivery_date
