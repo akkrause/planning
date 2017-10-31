@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 from operator import attrgetter
+from datetime import date
 
 class PlanningSettings(Document):
 
@@ -51,5 +52,11 @@ class PlanningSettings(Document):
 	def run_planning(self):
 		self.clear_tables()
 		self.get_production_order_operations()
-		for p in sorted(self.poo_list, key=attrgetter('holiday_date')):
-			print p.name, p.parent, p.workstation, p.expected_delivery_date
+		
+		for p in self.poo_list:
+			if any((x.parent == "Production" and x.holiday_date == date(2017,11,25)) for x in self.holiday_list):
+#			if any((x.parent == "Production")  for x in self.holiday_list):
+				for p in self.holiday_list:
+					print p.parent, p.holiday_date, p.description
+#		for p in sorted(self.poo_list, key=attrgetter('holiday_date')):
+#			print p.name, p.parent, p.workstation, p.expected_delivery_date
